@@ -65,7 +65,6 @@ Aqui está um diagrama que ilustra a arquitetura dos microsserviços:
 - **SQL Server**: Banco de dados para armazenamento de dados.
 - **RabbitMQ**: Serviço de mensageria para comunicação assíncrona entre os microsserviços.
 - **Docker**: Contêineres para facilitar o desenvolvimento, teste e implantação dos microsserviços.
-- **Kubernetes**: Orquestração de contêineres para gerenciar a implantação e a escalabilidade dos microsserviços.
 - **Swagger**: Documentação das APIs dos microsserviços.
 
 ## Como Executar
