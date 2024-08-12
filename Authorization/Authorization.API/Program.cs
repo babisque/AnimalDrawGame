@@ -1,3 +1,4 @@
+using Authorization.Core.Entities;
 using Authorization.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +14,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(opts =>
     var connectionString = builder.Configuration.GetConnectionString("AuthorizationDb");
     if (!builder.Environment.IsDevelopment())
     {
-        var passwword = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
-        connectionString = string.Format(connectionString, passwword);
+        connectionString = Environment.GetEnvironmentVariable("ConnectionString_AuthorizationDB");
+        Console.WriteLine($"The connection string is {connectionString}");
     }
 
     opts.UseSqlServer(connectionString);
 });
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -36,15 +37,16 @@ app.UseHttpsRedirection();
 
 using (var scope = app.Services.CreateScope())
 {
-    var service = scope.ServiceProvider;
+    var services = scope.ServiceProvider;
     try
     {
-        var context = service.GetRequiredService<ApplicationDbContext>();
+        Console.WriteLine("Migrating the DB");
+        var context = services.GetRequiredService<ApplicationDbContext>();
         context.Database.Migrate();
     }
     catch (Exception ex)
     {
-        var logger = service.GetRequiredService<ILogger<Program>>();
+        var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred creating the DB.");
     }
 }
