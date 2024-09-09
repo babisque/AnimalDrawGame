@@ -25,7 +25,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer("Server=authorization-db;Database=Authorization;User Id=sa;Password=SenhaMuitoFod@;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("");
         }
     }
 }
