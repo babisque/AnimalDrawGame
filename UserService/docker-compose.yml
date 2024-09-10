@@ -11,6 +11,8 @@ services:
       - 1433:1433
     volumes:
       - sql_data:/var/opt/mssql
+    networks:
+      - animal-draw-game-network
 
   user-service-api:
     build: .
@@ -21,6 +23,12 @@ services:
       - ASPNETCORE_ENVIROMENT:Production
     ports:
       - "5000:8080"
+    networks:
+      - animal-draw-game-network
 
 volumes:
   sql_data:
+
+networks:
+  animal-draw-game-network:
+    external: true

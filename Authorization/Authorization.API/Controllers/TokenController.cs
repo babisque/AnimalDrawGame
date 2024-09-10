@@ -23,7 +23,7 @@ public class TokenController(HttpClient httpClient) : ControllerBase
             Encoding.UTF8,
             "application/json");
 
-        using var response = await httpClient.PostAsync($"http://localhost:5000/user/login", jsonContent);
+        using var response = await httpClient.PostAsync($"http://userservice-user-service-api-1:8080/user/login", jsonContent);
         if (!response.IsSuccessStatusCode) return BadRequest();
         var userRes = await response.Content.ReadFromJsonAsync<TokenPostRes>();
 
