@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Core.DTO.User;
 using UserService.Core.Entities;
@@ -32,5 +31,22 @@ public class UserController : ControllerBase
             return BadRequest(result.Errors.ToList());
         
         return Created($"users/{user.Id}", user.Id);
+    }
+
+    [HttpPost("Login")]
+    public async Task<ActionResult> Login(UserLoginReq req)
+    {
+        var user = await _userManager.FindByNameAsync(req.UserName);
+        if (user == null || !(await _userManager.CheckPasswordAsync(user, req.Password)))
+            return BadRequest(new { message = "Username or password is incorrect" });
+
+        var res = new UserLoginRes
+        {
+            Id = user.Id,
+            Email = user.Email,
+            UserName = user.UserName
+        };
+
+        return Ok(res);
     }
 }

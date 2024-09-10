@@ -14,7 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(opts =>
     var connectionString = builder.Configuration.GetConnectionString("UserServiceDb");
     if (!builder.Environment.IsDevelopment())
     {
-        connectionString = Environment.ExpandEnvironmentVariables("ConnectionString_UserServiceDb");
+        connectionString = Environment.GetEnvironmentVariable("ConnectionString_UserServiceDb");
         Console.WriteLine($"The connection string is {connectionString}");
     }
 

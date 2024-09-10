@@ -10,4 +10,16 @@
       <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.7" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Entities\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Entities\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Entities\**" />
+    </ItemGroup>
+
 </Project>

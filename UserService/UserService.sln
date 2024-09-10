@@ -1,5 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Core", "UserService.Core\UserService.Core.csproj", "{225AF2B9-0D6F-4F97-88D5-025FC8D06BE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Infrastructure", "UserService.Infrastructure\UserService.Infrastructure.csproj", "{A8A09805-A414-4B1D-9A96-63224D940B10}"
@@ -24,5 +27,11 @@ Global
 		{C0ABAF9F-9B86-4729-BF21-9575B0EE6558}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0ABAF9F-9B86-4729-BF21-9575B0EE6558}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0ABAF9F-9B86-4729-BF21-9575B0EE6558}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ADAFDAA7-DA5C-46FC-9CC7-8D68F16EA3CC}
 	EndGlobalSection
 EndGlobal

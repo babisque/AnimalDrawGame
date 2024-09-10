@@ -1,26 +1,9 @@
 version: '3.8'
 
 services:
-  docker-authorization-db:
-    container_name: authorization-db
-    image: mcr.microsoft.com/mssql/server:latest
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=SenhaMuitoFod@
-    ports:
-      - 1433:1433
-    volumes:
-      - sql_data:/var/opt/mssql
-
   web:
     build: .
-    depends_on:
-      - docker-authorization-db
     environment:
-      ConnectionString_AuthorizationDB: "Server=authorization-db;Database=Authorization;User Id=sa;Password=SenhaMuitoFod@;TrustServerCertificate=True;"
       ASPNETCORE_ENVIRONMENT: "Production"
     ports:
-      - "5000:8080"
-
-volumes:
-  sql_data:
+      - "5001:8181"
