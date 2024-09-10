@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  user-service-db:
+    container_name: user-service-db
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SenhaMuitoFod@
+    ports:
+      - 1433:1433
+    volumes:
+      - sql_data:/var/opt/mssql
+    networks:
+      - animal-draw-game-network
+
+  user-service-api:
+    build: ./UserService
+    depends_on:
+      - user-service-db
+    environment:
+      - ConnectionString_UserServiceDb=Server=user-service-db;Database=UserServices;User Id=sa;Password=SenhaMuitoFod@;TrustServerCertificate=True;
+      - ASPNETCORE_ENVIROMENT:Production
+    ports:
+      - "5000:8080"
+    networks:
+      - animal-draw-game-network
+
+  authorization-service-api:
+    build: ./Authorization
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+    ports:
+      - "5001:8080"
+    networks:
+      - animal-draw-game-network
+
+volumes:
+  sql_data:
+
+networks:
+  animal-draw-game-network:
+    external: true
