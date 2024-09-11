@@ -1,12 +1,19 @@
+using System.Runtime.InteropServices.JavaScript;
+using DrawService.Core.Entities;
+using DrawService.Core.MessagingBroker;
+
 namespace DrawService.Worker;
 
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
-
-    public Worker(ILogger<Worker> logger)
+    private readonly Random _rnd = new();
+    private readonly IMessageSender _messageSender;
+    
+    public Worker(ILogger<Worker> logger, IMessageSender messageSender)
     {
         _logger = logger;
+        _messageSender = messageSender;
     }
 
     private readonly TimeSpan[] _runTimes =
@@ -38,7 +45,39 @@ public class Worker : BackgroundService
     {
         _logger.LogInformation("Worker doing work at: {time}", DateTimeOffset.Now);
         
+        if (stoppingToken.IsCancellationRequested)
+        {
+            _logger.LogInformation("Worker stopping due to cancellation.");
+            return;
+        }
+        
+        var drawnNumbers = new DrawnNumbers();
+
+        for (var i = 1; i <= 5; i++)
+        {
+            var category = new Category
+            {
+                CategoryName = $"Category {i}",
+                Numbers = []
+            };
+            
+            for (var j = 0; j < 4; j++)
+            {
+                var random = _rnd.Next(0, 10);
+                category.Numbers.Add(random);
+            }
+            drawnNumbers.Categories.Add(category);
+            
+            _logger.LogInformation("Generated Category {i} with numbers: {numbers}", i, string.Join(", ", category.Numbers));
+            
+            if (stoppingToken.IsCancellationRequested)
+            {
+                _logger.LogInformation("Worker stopping due to cancellation.");
+                return;
+            }
+        }
         
         await Task.Delay(1000, stoppingToken);
+        _logger.LogInformation("Worker finished at: {time}", DateTimeOffset.Now);
     }
 }
