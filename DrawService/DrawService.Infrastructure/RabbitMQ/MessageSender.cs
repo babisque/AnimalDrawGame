@@ -27,19 +27,25 @@ public class MessageSender : IMessageSender
         try
         {
             var channel = _connectionManager.CreateChannel();
+            
+            channel.ExchangeDeclare("drawnNumbers", ExchangeType.Fanout);
             channel.QueueDeclare(queue: _queueName,
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
                 arguments: null);
+            
+            channel.QueueBind(queue: _queueName,
+                exchange: "drawnNumbers",
+                routingKey: string.Empty);
 
             var body = Encoding.UTF8.GetBytes(message);
 
             var properties = channel.CreateBasicProperties();
             properties.Persistent = true;
 
-            channel.BasicPublish(exchange: string.Empty,
-                routingKey: _queueName,
+            channel.BasicPublish(exchange: "drawnNumbers",
+                routingKey: string.Empty,
                 basicProperties: properties,
                 body: body);
 
