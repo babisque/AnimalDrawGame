@@ -1,4 +1,5 @@
 ﻿using DrawService.Core.MessagingBroker;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace DrawService.Infrastructure.RabbitMQ;
@@ -7,8 +8,9 @@ public class ConnectionManager : IConnectionManager<IModel>
 {
     private readonly ConnectionFactory _factory;
 
-    public ConnectionManager(string hostname)
+    public ConnectionManager(IOptions<MessagingSettings> settings)
     {
+        var hostname = settings.Value.HostName;
         _factory = new ConnectionFactory { HostName = hostname };
     }
 

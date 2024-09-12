@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using DrawService.Core.MessagingBroker;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace DrawService.Infrastructure.RabbitMQ;
@@ -12,13 +13,14 @@ public class MessageSender : IMessageSender
     private readonly string _queueName;
     private readonly ConnectionManager _connectionManager;
 
-    public MessageSender(ILogger<MessageSender> logger, string hostName, string queueName)
+    public MessageSender(ILogger<MessageSender> logger, IOptions<MessagingSettings> settings, ConnectionManager connectionManager)
     {
         _logger = logger;
-        _hostName = hostName;
-        _queueName = queueName;
-        _connectionManager = new ConnectionManager(_hostName);
+        _hostName = settings.Value.HostName;
+        _queueName = settings.Value.QueueName;
+        _connectionManager = connectionManager;
     }
+
     
     public void Send(string message)
     {

@@ -1,4 +1,4 @@
-using System.Runtime.InteropServices.JavaScript;
+using System.Text.Json;
 using DrawService.Core.Entities;
 using DrawService.Core.MessagingBroker;
 
@@ -17,23 +17,24 @@ public class Worker : BackgroundService
     }
 
     private readonly TimeSpan[] _runTimes =
-    [
+    {
         new TimeSpan(11, 30, 0),
         new TimeSpan(14, 30, 0),
         new TimeSpan(18, 30, 0),
-        new TimeSpan(21, 30, 0)
-    ];
+        new TimeSpan(21, 30, 0),
+    };
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
             var currentTime = DateTime.Now.TimeOfDay;
-            
-            if (!_runTimes.Any(time => Math.Abs((currentTime - time).TotalMinutes) < 1))
+            var currentTimeWithoutSeconds = new TimeSpan(currentTime.Hours, currentTime.Minutes, 0);
+
+            if (_runTimes.Any(time => Math.Abs((currentTimeWithoutSeconds - time).TotalMinutes) < 1))
             {
                 _logger.LogInformation("Executing service at: {time}", DateTimeOffset.Now);
-                
+
                 await DrawNumbers(stoppingToken);
             }
 
@@ -76,6 +77,9 @@ public class Worker : BackgroundService
                 return;
             }
         }
+        
+        var jsonNumbers = JsonSerializer.Serialize(drawnNumbers);
+        _messageSender.Send(jsonNumbers);
         
         await Task.Delay(1000, stoppingToken);
         _logger.LogInformation("Worker finished at: {time}", DateTimeOffset.Now);
