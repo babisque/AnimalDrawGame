@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  rabbit-mq-service:
+    container_name: rabbit-mq
+    image: rabbitmq:3.13-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq
+    networks:
+      - animal-draw-game-network
+
   user-service-db:
     container_name: user-service-db
     image: mcr.microsoft.com/mssql/server
@@ -35,8 +46,16 @@ services:
     networks:
       - animal-draw-game-network
 
+  draw-number-service:
+    build: ./DrawService
+    depends_on:
+      - rabbit-mq-service
+    networks:
+      - animal-draw-game-network
+
 volumes:
   sql_data:
+  rabbit_data:
 
 networks:
   animal-draw-game-network:
