@@ -1,5 +1,7 @@
 using System.Text;
+using BetService.Core.MessagingBroker;
 using BetService.Core.Repositories;
+using BetService.Infrastructure.RabbitMQ;
 using BetService.Infrastructure.Repositories;
 using BetService.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,6 +27,7 @@ builder.Services.AddControllers();
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("BetDatabase"));
 
 builder.Services.AddScoped<IBetRepository, BetRepository>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 
 var app = builder.Build();
 

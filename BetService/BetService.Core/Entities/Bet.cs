@@ -11,6 +11,9 @@ public class Bet : EntityBase
     [BsonElement("Numbers")]
     public required List<int> Numbers { get; set; } = [];
     
+    [BsonElement("Amount")]
+    public decimal Amount { get; set; }
+    
     [BsonElement("EventDateTime")]
     public required DateTime EventDateTime { get; set; }
 

@@ -1,5 +1,7 @@
-﻿using BetService.Core.Dto;
+﻿using System.Text.Json;
+using BetService.Core.Dto;
 using BetService.Core.Entities;
+using BetService.Core.MessagingBroker;
 using BetService.Core.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,12 @@ namespace BetService.API.Controllers;
 public class BetController : ControllerBase
 {
     private readonly IBetRepository _betRepository;
+    private readonly IMessageService _messageService;
 
-    public BetController(IBetRepository betRepository)
+    public BetController(IBetRepository betRepository, IMessageService messageService)
     {
         _betRepository = betRepository;
+        _messageService = messageService;
     }
     
     [Authorize]
@@ -33,11 +37,19 @@ public class BetController : ControllerBase
             var bet = new Bet
             {
                 Numbers = req.Numbers,
+                Amount = req.Amount,
                 EventDateTime = req.EventDateTime,
                 UserId = req.UserId
             };
 
             await _betRepository.CreateAsync(bet);
+
+            var message = JsonSerializer.Serialize(new
+            {
+                UserId = bet.UserId,
+                BetAmount = bet.Amount
+            });
+            _messageService.Publish(message);
 
             return CreatedAtAction(nameof(GetBetById), new { betId = bet.Id }, bet);
         }
