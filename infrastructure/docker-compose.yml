@@ -26,7 +26,7 @@ services:
       - animal-draw-game-network
 
   user-service-api:
-    build: ./UserService
+    build: ../src/UserService
     depends_on:
       - user-service-db
     environment:
@@ -38,7 +38,7 @@ services:
       - animal-draw-game-network
 
   authorization-service-api:
-    build: ./Authorization
+    build: ../src/AuthService
     environment:
       ASPNETCORE_ENVIRONMENT: "Production"
     ports:
@@ -47,7 +47,7 @@ services:
       - animal-draw-game-network
 
   draw-number-service:
-    build: ./DrawService
+    build: ../src/DrawService
     depends_on:
       - rabbit-mq-service
     networks:
