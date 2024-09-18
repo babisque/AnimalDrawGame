@@ -1,4 +1,4 @@
-﻿namespace BetService.API.Dto;
+﻿namespace BetService.Core.Dto;
 
 public class GetBetRes
 {

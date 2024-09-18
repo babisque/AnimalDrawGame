@@ -46,7 +46,8 @@ public class TokenController(HttpClient httpClient) : ControllerBase
             SigningCredentials =
                 new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             Audience = "AnimalDrawGame",
-            Issuer = "Issuer"
+            Issuer = "Issuer",
+            Expires = DateTime.UtcNow.AddHours(5),
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

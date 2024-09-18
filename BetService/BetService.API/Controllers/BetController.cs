@@ -1,6 +1,7 @@
-﻿using BetService.API.Dto;
+﻿using BetService.Core.Dto;
 using BetService.Core.Entities;
 using BetService.Core.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BetService.API.Controllers;
@@ -16,14 +17,16 @@ public class BetController : ControllerBase
         _betRepository = betRepository;
     }
     
-    [HttpGet]
+    [Authorize]
+    [HttpGet("HelloWorld")]
     public ActionResult Test()
     {
         return Ok("Hello World!");
     }
 
-    [HttpPost]
-    public async Task<ActionResult> MakeBet([FromBody] MakeBetReq req)
+    [Authorize]
+    [HttpPost("CreateABet")]
+    public async Task<ActionResult> Post([FromBody] MakeBetReq req)
     {
         try
         {
@@ -44,6 +47,7 @@ public class BetController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("GetAll")]
     public async Task<ActionResult> GetBets()
     {
@@ -82,6 +86,7 @@ public class BetController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("{betId}")]
     public async Task<ActionResult> GetBetById([FromRoute] string betId)
     {
