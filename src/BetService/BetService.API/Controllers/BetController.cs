@@ -46,7 +46,8 @@ public class BetController : ControllerBase
 
             var message = JsonSerializer.Serialize(new
             {
-                UserId = bet.UserId,
+                bet.Id,
+                bet.UserId,
                 BetAmount = bet.Amount
             });
             _messageService.Publish(message);
