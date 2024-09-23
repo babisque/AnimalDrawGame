@@ -20,13 +20,6 @@ public class BetController : ControllerBase
         _betRepository = betRepository;
         _messageService = messageService;
     }
-    
-    [Authorize]
-    [HttpGet("HelloWorld")]
-    public ActionResult Test()
-    {
-        return Ok("Hello World!");
-    }
 
     [Authorize]
     [HttpPost("CreateABet")]
@@ -39,7 +32,8 @@ public class BetController : ControllerBase
                 Numbers = req.Numbers,
                 Amount = req.Amount,
                 EventDateTime = req.EventDateTime,
-                UserId = req.UserId
+                UserId = req.UserId,
+                Type = req.Type
             };
 
             await _betRepository.CreateAsync(bet);
@@ -50,7 +44,7 @@ public class BetController : ControllerBase
                 bet.UserId,
                 BetAmount = bet.Amount
             });
-            _messageService.Publish(message);
+            _messageService.Publish("UserQueue", message);
 
             return CreatedAtAction(nameof(GetBetById), new { betId = bet.Id }, bet);
         }

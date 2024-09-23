@@ -19,4 +19,7 @@ public class Bet : EntityBase
 
     [BsonElement("Confirmed")] 
     public bool Confirmed { get; set; } = false;
+    
+    [BsonElement("Type")]
+    public string Type { get; set; } = string.Empty;
 }

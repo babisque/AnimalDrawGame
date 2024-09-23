@@ -3,38 +3,44 @@ using BetService.Core.MessagingBroker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace BetService.Infrastructure.RabbitMQ;
 
 public class MessageService : IMessageService
 {
     private readonly ILogger<MessageService> _logger;
-    private readonly string _hostName;
-    private readonly string _queueName;
     private readonly ConnectionManager _connectionManager;
+    private readonly List<QueueSettings> _queueSettings;
 
     public MessageService(ILogger<MessageService> logger, IOptions<MessagingSettings> settings, ConnectionManager connectionManager)
     {
         _logger = logger;
-        _hostName = settings.Value.HostName;
-        _queueName = settings.Value.QueueName;
         _connectionManager = connectionManager;
+        _queueSettings = settings.Value.Queues;
     }
 
-    public void Publish(string message)
+    public void Publish(string queueName, string message)
     {
+        var queueSettings = _queueSettings.FirstOrDefault(x => x.Name == queueName);
+        if (queueSettings is null)
+        {
+            _logger.LogError($"Queue '{queueName}' not found in settings.");
+            return;
+        }
+        
         try
         {
-            var channel = _connectionManager.CreateChannel();
+            var channel = _connectionManager.CreateChannel(queueName);
             
-            channel.ExchangeDeclare("userBet", ExchangeType.Fanout);
-            channel.QueueDeclare(queue: _queueName,
+            channel.ExchangeDeclare(queueSettings.Exchange, ExchangeType.Fanout);
+            channel.QueueDeclare(queue: queueName,
                 durable: true,
                 exclusive: false,
                 autoDelete: false,
                 arguments: null);
             
-            channel.QueueBind(queue: _queueName,
+            channel.QueueBind(queue: queueName,
                 exchange: "userBet",
                 routingKey: string.Empty);
             
@@ -48,15 +54,56 @@ public class MessageService : IMessageService
                 basicProperties: properties,
                 body: body);
             
-            _logger.LogInformation("Message sent to {Queue}", _queueName);
+            _logger.LogInformation("Message sent to {Queue}", queueName);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error sending message to {Queue}", _queueName);
+            _logger.LogError(e, "Error sending message to {Queue}", queueName);
         }
     }
 
-    public void Receive()
+    public List<string> Receive(string queueName)
     {
+        var queueSettings = _queueSettings.FirstOrDefault(x => x.Name == queueName);
+        if (queueSettings is null)
+        {
+            _logger.LogError($"Queue '{queueName}' not found in settings.");
+            return [];
+        }
+
+        try
+        {
+            List<string> messages = [];
+            var channel = _connectionManager.CreateChannel(queueName);
+            
+            channel.ExchangeDeclare(queueSettings.Exchange, ExchangeType.Fanout);
+            
+            channel.QueueBind(
+                queue: queueName,
+                exchange: queueSettings.Exchange,
+                routingKey: string.Empty
+                );
+
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                messages.Add(message);
+            };
+
+            channel.BasicConsume(
+                queue: queueName,
+                autoAck: true,
+                consumer: consumer
+            );
+
+            return messages;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error consuming messages from {Queue}", queueName);
+            return [];
+        }
     }
 }

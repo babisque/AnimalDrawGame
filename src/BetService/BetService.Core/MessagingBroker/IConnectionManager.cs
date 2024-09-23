@@ -2,5 +2,5 @@
 
 public interface IConnectionManager<out T>
 {
-    T CreateChannel();
+    T CreateChannel(string channelName);
 }

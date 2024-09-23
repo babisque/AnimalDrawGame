@@ -24,7 +24,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("BetDatabase"));
+builder.Services.Configure<MessagingSettings>(builder.Configuration.GetSection("MessagingSettings"));
 
 builder.Services.AddScoped<IBetRepository, BetRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();

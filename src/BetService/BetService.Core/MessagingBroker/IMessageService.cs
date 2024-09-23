@@ -2,6 +2,6 @@
 
 public interface IMessageService
 {
-    void Publish(string message);
-    void Receive();
+    void Publish(string queueName, string message);
+    List<string> Receive(string queueName);
 }

@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetService.API", "BetServic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetService.Infrastructure", "BetService.Infrastructure\BetService.Infrastructure.csproj", "{39A4A74F-06C5-4EBB-B134-521353BDBBC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetService.Worker", "BetService.Worker\BetService.Worker.csproj", "{86751C5E-3153-421A-9918-E2A0433CE575}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{39A4A74F-06C5-4EBB-B134-521353BDBBC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39A4A74F-06C5-4EBB-B134-521353BDBBC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39A4A74F-06C5-4EBB-B134-521353BDBBC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86751C5E-3153-421A-9918-E2A0433CE575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86751C5E-3153-421A-9918-E2A0433CE575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86751C5E-3153-421A-9918-E2A0433CE575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86751C5E-3153-421A-9918-E2A0433CE575}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
