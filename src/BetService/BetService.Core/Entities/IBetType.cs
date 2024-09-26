@@ -3,10 +3,14 @@
 public interface IBetType
 {
     /// <summary>
-    /// Calcula os ganhos da aposta. Se o animal escolhido for sorteado, 
-    /// o valor do prêmio é 18 vezes o valor da aposta.
+    /// Populate the numbers of bet
     /// </summary>
-    /// <param name="betAmount">O valor apostado.</param>
-    /// <returns>O valor dos ganhos, caso a aposta seja vencedora.</returns>
+    void CreateBet(object betNumbers);
+    
+    /// <summary>
+    /// Calculate the winnings of the bet.
+    /// </summary>
+    /// <param name="betAmount">The amount wagered.</param>
+    /// <returns>The amount of winnings if the bet is successful.</returns>
     decimal CalculateWinnings(decimal betAmount);
 }

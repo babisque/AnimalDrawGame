@@ -6,32 +6,31 @@ namespace BetService.Core.Entities.BetEntities
     /// Represents a bet in the "Group Corner" (Quina de Grupo) category Animal Draw Game, where the bettor selects five animals/groups.
     /// If all five selected animals are drawn in the results, the bettor wins 5000 times the bet amount.
     /// </summary>
-    public class GroupCorner : IBetType
+    public class GroupCorner : BetBase
     {
-        private string[] _animals = new string[5];
+        
 
         /// <summary>
         /// The five selected animals/groups for the bet.
         /// </summary>
         [BsonElement("Numbers")]
-        public string[] Animals
-        {
-            get => _animals;
-            set
-            {
-                if (value.Length != 5)
-                    throw new ArgumentException("Exactly five animals must be selected.");
-                
-                if (value.Any(string.IsNullOrWhiteSpace))
-                {
-                    throw new ArgumentException("Animal/group names cannot be empty or whitespace.");
-                }
+        public string[] Animals { get; private set; }
 
-                _animals = value;
+        public override void CreateBet(object parameters)
+        {
+            string[] betNumbers = (string[])parameters;
+            if (betNumbers.Length != 5)
+                throw new ArgumentException("Exactly five animals must be selected.");
+                
+            if (betNumbers.Any(string.IsNullOrWhiteSpace))
+            {
+                throw new ArgumentException("Animal/group names cannot be empty or whitespace.");
             }
+
+            Animals = betNumbers;
         }
 
-        public decimal CalculateWinnings(decimal betAmount)
+        public override decimal CalculateWinnings(decimal betAmount)
         {
             if (betAmount <= 0)
                 throw new ArgumentOutOfRangeException(nameof(betAmount), "Bet amount must be greater than zero.");

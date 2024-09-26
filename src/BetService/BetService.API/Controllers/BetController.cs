@@ -3,6 +3,7 @@ using BetService.Core.Dto;
 using BetService.Core.Entities;
 using BetService.Core.MessagingBroker;
 using BetService.Core.Repositories;
+using BetService.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,11 +15,13 @@ public class BetController : ControllerBase
 {
     private readonly IBetRepository _betRepository;
     private readonly IMessageService _messageService;
+    private readonly IBetServices _betServices;
 
-    public BetController(IBetRepository betRepository, IMessageService messageService)
+    public BetController(IBetRepository betRepository, IMessageService messageService, IBetServices betServices)
     {
         _betRepository = betRepository;
         _messageService = messageService;
+        _betServices = betServices;
     }
 
     [Authorize]
@@ -29,12 +32,13 @@ public class BetController : ControllerBase
         {
             var bet = new Bet
             {
-                Numbers = req.Numbers,
                 Amount = req.Amount,
                 EventDateTime = req.EventDateTime,
                 UserId = req.UserId,
-                /*Type = req.Type*/
             };
+
+            bet.Type = _betServices.CreateBetType(req.Type);
+            bet.Type.CreateBet(req.Numbers);
 
             await _betRepository.CreateAsync(bet);
 
@@ -79,7 +83,6 @@ public class BetController : ControllerBase
                 res.Add(new GetBetRes
                 {
                     Id = bet.Id,
-                    Numbers = bet.Numbers,
                     UserId = bet.UserId,
                     EventDateTime = bet.EventDateTime
                 });
@@ -106,7 +109,6 @@ public class BetController : ControllerBase
             var res = new GetBetRes
             {
                 Id = bet.Id,
-                Numbers = bet.Numbers,
                 UserId = bet.UserId,
                 EventDateTime = bet.EventDateTime
             };

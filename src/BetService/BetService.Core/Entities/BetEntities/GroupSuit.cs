@@ -6,30 +6,28 @@ namespace BetService.Core.Entities.BetEntities
     /// Represents a bet in the "Group Suit" (Terno de Grupo) category in Animal Draw Game, where the bettor selects three different groups/animals.
     /// If all three selected groups appear in any of the five prize categories, the bettor wins 130 times the bet amount.
     /// </summary>
-    public class GroupSuit : IBetType
+    public class GroupSuit : BetBase
     {
-        private int[] _groupNumbers = new int[3];
-
         /// <summary>
         /// The three selected groups/animals for the bet.
         /// </summary>
         [BsonElement("Groups")]
-        public int[] Groups
+        public int[] Groups { get; private set; }
+
+        public override void CreateBet(object parameters)
         {
-            get => _groupNumbers;
-            set
-            {
-                if (value.Length != 3)
-                    throw new ArgumentException("Exactly three groups/animals must be selected.");
+            var betNumbers = parameters as int[];
+            
+            if (betNumbers.Length != 3)
+                throw new ArgumentException("Exactly three groups/animals must be selected.");
                 
-                if (value[0] == value[1] || value[1] == value[2] || value[0] == value[2])
-                    throw new ArgumentException("All three groups/animals must be different.");
+            if (betNumbers[0] == betNumbers[1] || betNumbers[1] == betNumbers[2] || betNumbers[0] == betNumbers[2])
+                throw new ArgumentException("All three groups/animals must be different.");
                 
-                _groupNumbers = value;
-            }
+            Groups = betNumbers;
         }
-        
-        public decimal CalculateWinnings(decimal betAmount)
+
+        public override decimal CalculateWinnings(decimal betAmount)
         {
             if (betAmount <= 0)
                 throw new ArgumentOutOfRangeException(nameof(betAmount), "Bet amount must be greater than zero.");

@@ -2,7 +2,7 @@
 
 public class QueueSettings
 {
-    public string Name { get; set; }
-    public string HostName { get; set; }
-    public string Exchange { get; set; }
+    public required string Name { get; set; }
+    public required string HostName { get; set; }
+    public required string Exchange { get; set; }
 }

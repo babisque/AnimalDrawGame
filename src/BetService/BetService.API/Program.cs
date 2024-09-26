@@ -1,6 +1,7 @@
 using System.Text;
 using BetService.Core.MessagingBroker;
 using BetService.Core.Repositories;
+using BetService.Core.Services;
 using BetService.Infrastructure.RabbitMQ;
 using BetService.Infrastructure.Repositories;
 using BetService.Infrastructure.Settings;
@@ -30,6 +31,7 @@ builder.Services.Configure<MessagingSettings>(builder.Configuration.GetSection("
 
 builder.Services.AddScoped<IBetRepository, BetRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IBetServices, BetServices>();
 
 var app = builder.Build();
 
