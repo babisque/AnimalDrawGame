@@ -1,5 +1,4 @@
 using BetService.Core.MessagingBroker;
-using BetService.Worker;
 using BetService.Worker.Workers;
 
 var builder = Host.CreateApplicationBuilder(args);

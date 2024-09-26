@@ -8,9 +8,6 @@ public class Bet : EntityBase
     [BsonElement("UserId")]
     public string UserId { get; set; }
     
-    [BsonElement("Numbers")]
-    public required List<int> Numbers { get; set; } = [];
-    
     [BsonElement("Amount")]
     public decimal Amount { get; set; }
     
@@ -21,5 +18,10 @@ public class Bet : EntityBase
     public bool Confirmed { get; set; } = false;
     
     [BsonElement("Type")]
-    public string Type { get; set; } = string.Empty;
+    public IBetType Type { get; set; }
+
+    public decimal GetWinnings()
+    {
+        return Type.CalculateWinnings(Amount);
+    }
 }

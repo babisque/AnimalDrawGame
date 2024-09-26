@@ -33,7 +33,7 @@ public class BetController : ControllerBase
                 Amount = req.Amount,
                 EventDateTime = req.EventDateTime,
                 UserId = req.UserId,
-                Type = req.Type
+                /*Type = req.Type*/
             };
 
             await _betRepository.CreateAsync(bet);
@@ -100,7 +100,7 @@ public class BetController : ControllerBase
         try
         {
             var bet = await _betRepository.GetByIdAsync(betId);
-            if (String.IsNullOrEmpty(bet.Id))
+            if (string.IsNullOrEmpty(bet.Id))
                 return NotFound();
 
             var res = new GetBetRes
